@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gemini Yan Panel Özetleyici</title>
+  <link rel="stylesheet" href="sidepanel.css">
+</head>
+<body>
+  <div class="panel-container">
+    <!-- Üst Başlık ve Durum -->
+    <header class="panel-header">
+      <div class="brand">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24" width="22" height="22">
+            <path fill="url(#sparkle-grad)" d="M12 2L14.4 8.6L21 11L14.4 13.4L12 20L9.6 13.4L3 11L9.6 8.6L12 2Z"/>
+            <defs>
+              <linearGradient id="sparkle-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#38bdf8" />
+                <stop offset="50%" stop-color="#818cf8" />
+                <stop offset="100%" stop-color="#c084fc" />
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1>Gemini Özetleyici</h1>
+          <span class="brand-sub">Yan Panel & Video Analiz</span>
+        </div>
+      </div>
+      <div class="session-badge" id="session-badge" title="Oturum durumunu kontrol etmek için tıklayın">
+        <span class="badge-dot" id="badge-dot"></span>
+        <span class="badge-label" id="badge-label">Kontrol Ediliyor...</span>
+      </div>
+    </header>
+
+    <!-- Oturum Uyarısı -->
+    <div class="alert-box hidden" id="login-alert">
+      <div class="alert-content">
+        <strong>Google Gemini Oturumu Gerekli</strong>
+        <p>Eklentinin çalışabilmesi için tarayıcınızda Google hesabınızla Gemini'ye giriş yapmış olmanız gerekir.</p>
+        <a href="https://gemini.google.com" target="_blank" class="btn-login" id="btn-login">
+          gemini.google.com'da Oturum Aç
+        </a>
+      </div>
+    </div>
+
+    <!-- Kaynak Seçimi ve Sekme Bilgisi -->
+    <section class="section-card">
+      <div class="section-title-row">
+        <span class="section-title">Özetlenecek Kaynak</span>
+        <button class="btn-text" id="btn-refresh-tab" title="Aktif sekmedeki metni yeniden çek">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+          </svg>
+          Sekmeyi Tara
+        </button>
+      </div>
+
+      <div class="segmented-control">
+        <button class="segment-btn active" data-source="selection" id="seg-selection">
+          Seçili Metin
+        </button>
+        <button class="segment-btn" data-source="page" id="seg-page">
+          Tüm Sayfa
+        </button>
+        <button class="segment-btn hidden" data-source="youtube" id="seg-youtube">
+          📺 YouTube
+        </button>
+      </div>
+
+      <!-- Kaynak Metin Önizleme / Durum -->
+      <div class="source-info" id="source-info">
+        <div class="source-meta">
+          <span class="source-tag" id="source-tag">Seçili Metin</span>
+          <span class="source-chars" id="source-chars">0 karakter</span>
+        </div>
+        <div class="source-preview" id="source-preview">
+          Sayfadan bir metin seçin veya YouTube videosu açın.
+        </div>
+      </div>
+    </section>
+
+    <!-- Özetleme Modu Seçici -->
+    <section class="section-card">
+      <span class="section-title">Özetleme Biçimi</span>
+      <div class="mode-chips">
+        <button class="chip active" data-mode="bullet">📌 Maddeli Liste</button>
+        <button class="chip" data-mode="concise">⚡ Hızlı / Kısa</button>
+        <button class="chip" data-mode="detailed">📖 Detaylı Analiz</button>
+        <button class="chip" data-mode="keypoints">🎯 Ana Fikirler</button>
+      </div>
+
+      <!-- Özel Talimat -->
+      <div class="custom-prompt-row">
+        <input type="text" id="custom-prompt" placeholder="İsteğe bağlı talimat (Örn: Türkçe özetle, maddeleri numaralandır...)" />
+      </div>
+
+      <!-- Ana Buton -->
+      <button class="btn-primary" id="btn-start-summary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2L14.4 8.6L21 11L14.4 13.4L12 20L9.6 13.4L3 11L9.6 8.6L12 2Z"/>
+        </svg>
+        <span id="btn-summary-text">Gemini ile Özet Çıkart</span>
+      </button>
+    </section>
+
+    <!-- Özet Çıktı Alanı -->
+    <section class="section-card result-section" id="result-section">
+      <div class="section-title-row">
+        <span class="section-title" id="result-title">Gemini Özeti</span>
+        <div class="result-actions" id="result-actions">
+          <button class="btn-icon" id="btn-speak-result" title="Sesli Oku (Durdur/Başlat)">
+            <svg id="speak-icon-play" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            </svg>
+          </button>
+          <button class="btn-icon" id="btn-copy-result" title="Özeti Kopyala">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+              <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+            </svg>
+          </button>
+          <button class="btn-icon" id="btn-clear-result" title="Temizle">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="result-content" id="result-content">
+        <div class="placeholder-state">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="1.5">
+            <path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+          </svg>
+          <p>Özetlemek istediğiniz metni seçin veya YouTube videosu açıkken <strong>Gemini ile Özet Çıkart</strong> butonuna tıklayın.</p>
+        </div>
+      </div>
+
+      <!-- Soru Sorma (Follow-up Q&A) -->
+      <div class="qa-container hidden" id="qa-container">
+        <div class="qa-input-row">
+          <input type="text" id="qa-input" placeholder="Video veya özet hakkında soru sor..." />
+          <button class="btn-send" id="btn-qa-send" title="Sor">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Alt Bilgi ve Gizlilik Beyanı -->
+    <footer class="panel-footer">
+      <div class="privacy-note">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-1 6h2v2h-2V7zm0 4h2v6h-2v-6z"/>
+        </svg>
+        <span>Sıfır Dış Sunucu: Doğrudan kendi Google Gemini hesabınız ve yerel Web Speech motoruyla çalışır.</span>
+      </div>
+    </footer>
+  </div>
+
+  <script src="sidepanel.js"></script>
+</body>
+</html>

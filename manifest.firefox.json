@@ -1,0 +1,68 @@
+{
+  "manifest_version": 3,
+  "name": "Gemini Summarizer",
+  "version": "1.0.0",
+  "description": "Seçtiğiniz metni veya tüm web sayfasını, kendi Google Gemini hesabınız ve tarayıcı oturumunuz üzerinden doğrudan özetler.",
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "gemini-summarizer@local",
+      "strict_min_version": "109.0"
+    }
+  },
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "cookies",
+    "storage",
+    "contextMenus"
+  ],
+  "host_permissions": [
+    "https://gemini.google.com/*",
+    "https://*.google.com/*",
+    "<all_urls>"
+  ],
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "action": {
+    "default_title": "Gemini Özetleyici",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "sidebar_action": {
+    "default_title": "Gemini Özetleyici",
+    "default_panel": "sidepanel.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "css": ["content.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "icons/*.png"
+      ],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

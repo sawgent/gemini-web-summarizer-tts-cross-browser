@@ -1,0 +1,11 @@
+/* Gemini Edge Summarizer Content Stylesheet */
+#gemini-edge-summarizer-root {
+  all: initial;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  z-index: 2147483647;
+  pointer-events: auto;
+}
